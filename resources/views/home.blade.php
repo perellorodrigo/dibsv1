@@ -23,40 +23,32 @@ async defer></script>
   	function createMap(position) {
         userLocation = {lat: position.coords.latitude, lng: position.coords.longitude};; // Set user location
         
-        
         map = new google.maps.Map(document.getElementById('map'), {
           center: userLocation, // Center of the map is the user location
-          zoom: 12,
+          zoom: 10,
           disableDefaultUI: true
         });
   			
   		var usericon = '/uploads/user_marker.png';
   		marker = new google.maps.Marker({position: userLocation, map: map,icon: usericon}); // Add user location to map
 
-      items.forEach(function(item) {
-       var point = new google.maps.LatLng(
-                parseFloat(item.lat),
-                parseFloat(item.lng));
-             
-        //to-do: ideally, this should be rendered via template -> different view   
-        var sideItemInfo = '<div id="'+ item.id  +'"><h1>'+ item.name + '</h1><img class="img-fluid" src="/uploads/' + item.imageurl +'"><p>'+ item.description +'</p></div>';
-        
-        
+      items.forEach(function(item) { //for each loop - goes through every item
+        var point = new google.maps.LatLng(
+                  parseFloat(item.lat),
+                  parseFloat(item.lng));
+               
         marker = new google.maps.Marker({
-          map: map,
-          position: point
+            map: map,
+            position: point
+          });
+          
+        marker.addListener('click', function(event) {
+          $('#displayfield').empty();
+          $('#displayfield').load('/home/' + item.id);
+  
         });
         
-      marker.addListener('click', function(event) {
-        $('#displayfield').empty();
-        
-        $('#displayfield').load('/home/' + item.id);
-        
-        //$(sideItemInfo).appendTo($('#displayfield')) // to-do: call function that will render according to data
-      });
-      
-      
-      markers.push(marker);
+        markers.push(marker);
       });
   	}
 </script>
@@ -70,15 +62,18 @@ window.onload = function(){
     slider.oninput = function() {
       output.innerHTML = this.value + ' km';
       var range = parseFloat(this.value);
-
+      /* global markers */
       // For each marker:
       markers.forEach(function(markerElement) {
         //var markerPosition = markerElement.getPosition;
         var markerLat = markerElement.getPosition().lat();
         var markerLng = markerElement.getPosition().lng();
         
+        /* global userLocation */
         var distance = getDistance(userLocation.lng, userLocation.lat, markerLng, markerLat);
         
+        
+        /* global map */
         if (distance <= range)
         {
           markerElement.setMap(map);
@@ -105,7 +100,7 @@ window.onload = function(){
 
 @endsection
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -124,9 +119,10 @@ window.onload = function(){
           
         </div>
         <div class="col-md-6">
-            <div id="map" style="height:400px;"></div>
+            <div id="map" style="height:500px;"></div>
+            <div id="mapcontainer"></div>
         </div>
-        <div class="col-md-6" id="displayfield">
+        <div class="col-md-4" id="displayfield">
             
         </div>
     </div>

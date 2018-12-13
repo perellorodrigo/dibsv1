@@ -1,10 +1,4 @@
-  	var items = {!! json_encode($items) !!};
-    var userLocation;
-    var markers = [];
-    var map;
-    var marker;
-  	
-  	window.onload = function getLocation() {
+  	function getLocation() {
   		if (navigator.geolocation) {
   			navigator.geolocation.getCurrentPosition(createMap);
   		} else {

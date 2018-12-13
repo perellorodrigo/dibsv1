@@ -30,16 +30,14 @@ Route::post('/post_item', function (Request $request) {
     $item->lat = floatval($request->input('itemlat'));
     $item->lng = floatval($request->input('itemlng'));
     $file = $request->file('picture');
-    
-    
-    
     $item->imageurl = Storage::disk('uploads')->put('photos',$file);
     
-  
     $item->save();
 
     return redirect('/');
 });
+Route::post('/home/')
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
