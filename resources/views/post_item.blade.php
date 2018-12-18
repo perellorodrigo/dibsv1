@@ -11,7 +11,7 @@
   		if (navigator.geolocation) {
   			navigator.geolocation.getCurrentPosition(fillDetails);
   		} else {
-  			$('<p>Geolocation is not supported by this browser.<p>').appendTo($('#userLocationBox'));;
+  			$('<p>Geolocation is not supported by this browser.<p>').appendTo($('#userLocationBox'));
   		}
   	}
   	function fillDetails(position) {
@@ -47,6 +47,15 @@
                 <input type="text" name="description" id="description" class="form-control">
             </div>
         </div>
+        
+        <div class="form-group">  
+            <label for="pickup_instructions" class="col-sm-3 control-label">Pick-up Instructions</label>
+
+            <div class="col-sm-6">
+                <input type="text" name="pickup_instructions" id="pickup_instructions" class="form-control">
+            </div>
+        </div>        
+        
         <div class="form-group">
             <label for="location" class="col-sm-3 control-label">Item Location</label>
             <div class="col-sm-6">

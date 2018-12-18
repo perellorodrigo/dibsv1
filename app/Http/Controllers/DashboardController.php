@@ -3,6 +3,8 @@
 namespace Dibs\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
+use Dibs\Item;
 
 class DashboardController extends Controller
 {
@@ -18,6 +20,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $items = Item::where('dibs_caller_id',Auth::id())->where('is_available', true)->get();;
+        
+        
+        return view('dashboard')->withItems($items);
     }
 }

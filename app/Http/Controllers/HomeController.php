@@ -4,30 +4,35 @@ namespace Dibs\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Dibs\Item;
+use Auth;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    */
     
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function callDibs($id)
+     {
+         //to-do: test if another user already called dibs
+        $affected = Item::where('id', $id)
+                ->whereNull('dibs_caller_id')
+                ->update(['dibs_caller_id' => Auth::id()]);
+      
+      
+        $messages = array();
+        if ($affected == 0)
+            array_push($messages,'Whops! Someone called dibs before you');
+        else
+            array_push($messages,'You successfully called dibs!');
+        
+        return view('home')->withMessages($messages);
+     }
+     
+     
     public function index()
     {
-        $items = Item::all();
-        
-        
-        return view('home')->withItems($items);
+        //$items = Item::all();
+        //$message = '';
+        $messages = array();
+        //return view('home')->withItems($items);
+        return view('home')->withMessages($messages);
     }
 }

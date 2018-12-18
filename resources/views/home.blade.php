@@ -2,26 +2,41 @@
 @section('header')
 <link href="{{  secure_asset('css/homespecial.css') }}" rel="stylesheet">
 <script type="text/javascript">
-
-  	function getLocation() {
-  		if (navigator.geolocation) {
-  			navigator.geolocation.getCurrentPosition(createMap);
-  		} else {
-  			$('<p>Geolocation is not supported by this browser.<p>').appendTo($('#userLocationBox'));;
-  		}
-  	}
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLtgGpe40Edtcsvmor0jJIT3eM2XFhFE8&callback=getLocation"
-async defer></script>
-<script type="text/javascript">	
-    var items = {!! json_encode($items) !!};
     var userLocation;
     var markers = [];
     var map;
     var marker;
     
+  	window.onload = function() {
+  		if (navigator.geolocation) {
+  			navigator.geolocation.getCurrentPosition(sendPosition);
+  		} else {
+  			$('<p>Geolocation is not supported by this browser.<p>').appendTo($('#userLocationBox'));;
+  		}
+  	}
+  	function sendPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        
+        $.ajax({
+  				type: "POST",
+  				url: "/get_user_position",
+  				data : {'lat': latitude,
+  				        'lng': longitude,
+  				        '_token': $('meta[name="csrf-token"]').attr('content')},
+  				success:function (data) {
+  				  //alert('looks like it is working...');
+  				  console.log("inside");
+  				  $('#mapcontainer').empty();
+  				  $('#mapcontainer').append(data);
+  				  navigator.geolocation.getCurrentPosition(createMap);
+  				  setupRange();
+  				},
+			});
+  	}
+    
   	function createMap(position) {
-        userLocation = {lat: position.coords.latitude, lng: position.coords.longitude};; // Set user location
+        userLocation = {lat: position.coords.latitude, lng: position.coords.longitude}; // Set user location
         
         map = new google.maps.Map(document.getElementById('map'), {
           center: userLocation, // Center of the map is the user location
@@ -37,23 +52,22 @@ async defer></script>
                   parseFloat(item.lat),
                   parseFloat(item.lng));
                
+        
         marker = new google.maps.Marker({
             map: map,
+            distanceToUser: item.distanceToUser,
             position: point
           });
           
         marker.addListener('click', function(event) {
           $('#displayfield').empty();
           $('#displayfield').load('/home/' + item.id);
-  
         });
         
         markers.push(marker);
       });
   	}
-</script>
-<script type="text/javascript">
-window.onload = function(){
+function setupRange(){
     var slider = document.getElementById("radiusSlider");
     var output = document.getElementById("displayRadius");
     output.innerHTML = slider.value + ' km'; // Display the default slider value
@@ -62,41 +76,20 @@ window.onload = function(){
     slider.oninput = function() {
       output.innerHTML = this.value + ' km';
       var range = parseFloat(this.value);
+      
       /* global markers */
       // For each marker:
       markers.forEach(function(markerElement) {
-        //var markerPosition = markerElement.getPosition;
-        var markerLat = markerElement.getPosition().lat();
-        var markerLng = markerElement.getPosition().lng();
-        
-        /* global userLocation */
-        var distance = getDistance(userLocation.lng, userLocation.lat, markerLng, markerLat);
-        
         
         /* global map */
-        if (distance <= range)
-        {
+        if (markerElement.get('distanceToUser') <= range)
           markerElement.setMap(map);
-        }
         else
-        {
           markerElement.setMap(null);
-        }
-        
-        // Got from stackoverflow:
-        function getDistance(lat1, lon1, lat2, lon2) {
-          var R = 6371; // Radius of the earth in km
-          var dLat = (lat2 - lat1) * Math.PI / 180;  // deg2rad below
-          var dLon = (lon2 - lon1) * Math.PI / 180;
-          var a = 
-             0.5 - Math.cos(dLat)/2 + 
-             Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-             (1 - Math.cos(dLon))/2;
-          
-          return R * 2 * Math.asin(Math.sqrt(a));
-        }
 })}};
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLtgGpe40Edtcsvmor0jJIT3eM2XFhFE8"
+async defer></script>
 
 @endsection
 @section('content')
@@ -116,14 +109,16 @@ window.onload = function(){
             </div>
         </div>
         <div class="col-md-6">
-          
+          @include('common.messages')
         </div>
-        <div class="col-md-6">
-            <div id="map" style="height:500px;"></div>
-            <div id="mapcontainer"></div>
         </div>
-        <div class="col-md-4" id="displayfield">
-            
+        <div class="row">
+          <div class="col-md-6" id="mapcontainer" style="height:500px;">
+              
+          </div>
+          <div class="col-md-6" id="displayfield">
+              
+          </div>
         </div>
     </div>
 </div>

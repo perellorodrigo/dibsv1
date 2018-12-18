@@ -10,7 +10,7 @@ class DisplayItemDetailsController extends Controller
     //
     public function show($id)
     {
-        $item = Item::where('id', $id)->first();;
+        $item = Item::where('id', $id)->first();
         
     
         return view('display_item_details')->withItem($item);
