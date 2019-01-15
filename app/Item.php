@@ -12,6 +12,11 @@ class Item extends Model
         return $this->belongsTo('Dibs\User','owner_id');
     }
     
+    public function category()
+    {
+        return $this->belongsTo('Dibs\Category','category_id');
+    }
+    
     public function dibscaller()
     {
         return $this->belongsTo('Dibs\User','dibs_caller_id');

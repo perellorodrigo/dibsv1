@@ -9,7 +9,7 @@ use Auth;
 class HomeController extends Controller
 {
     
-    public function callDibs($id)
+    public function callDibs($id) // to-do: eliminate this function
      {
          //to-do: test if another user already called dibs
         $affected = Item::where('id', $id)
@@ -29,10 +29,6 @@ class HomeController extends Controller
      
     public function index()
     {
-        //$items = Item::all();
-        //$message = '';
-        $messages = array();
-        //return view('home')->withItems($items);
-        return view('home')->withMessages($messages);
+        return view('home');
     }
 }

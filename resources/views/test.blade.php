@@ -6,9 +6,6 @@ async defer></script>
 
 
 @section('content')
-<div class="container">
-    <dashboard-component
-    :user="{{ json_encode(Auth::user()) }}"
-    ></dashboard-component>
-</div>
+    <test-component
+    ></test-component>
 @endsection

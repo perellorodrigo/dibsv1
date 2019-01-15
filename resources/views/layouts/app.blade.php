@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="height: 100%;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,7 @@
     <!-- Scripts -->
     
     <script src="{{  secure_asset('js/app.js') }}" defer></script>
-
+    
     <!-- Styles -->
     <link href="{{  secure_asset('css/app.css') }}" rel="stylesheet">
     
@@ -20,11 +20,17 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
     @yield('header')
-
+<style type="text/css">
+    #app{
+        display: grid;
+        grid-template-rows: 55px calc(100vh - 55px);
+        position: relative;
+    }
+</style>
 
 </head>
-<body>
-    <div id="app">
+<body style="height: 100%;">
+    <div id="app" style="height: 100%;">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -54,6 +60,10 @@
                             @endif
                         @else
                         <!-- If user is logged in: -->
+                           <li class="nav-item">
+                                <a class="nav-link" href="{{ route('test') }}">test</a>
+                            </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('home') }}">Home</a>
                             </li>
@@ -88,7 +98,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="pt-4">
             @yield('content')
         </main>
     </div>

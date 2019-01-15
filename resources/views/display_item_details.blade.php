@@ -1,4 +1,6 @@
-<div class="card text-center">
+<item-component :item="{{ json_encode($item->id) }}"></item-component>
+
+<div class="card text-center" style="width: 100%;">
   <div style="height: 350px" class="card-img-top">
     <img src="/uploads/{{$item->imageurl}}" style="max-width: 100%;max-height: 100%;">
   </div>
@@ -10,8 +12,6 @@
       @else
       <p class="card-text">Posted by: {{ $item->owner->name }}</p> 
     @endif
-    
-
     
     <p class="card-text">Posted Date: {{date('h:m d/m/Y', strtotime($item->created_at))}}</p>
       
@@ -29,7 +29,7 @@
           @else
             @if($item->dibscaller->id == Auth::user()->id)
               <div class="alert alert-success">Dibs called by you</div>
-              @else
+            @else
               <div class="alert alert-warning">Dibs called by: {{ $item->dibscaller->name }}</div>
             @endif
           @endif
@@ -40,4 +40,5 @@
     @endguest
   </div>
 </div>
+
 

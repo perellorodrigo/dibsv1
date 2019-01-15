@@ -3,6 +3,9 @@
 /public/storage
 /storage/*.key
 /vendor
+/resources/js/components/aComponent.vue
+/resources/js/components/bComponent.vue
+/resources/js/components/testComponent.vue
 .env
 .phpunit.result.cache
 Homestead.json

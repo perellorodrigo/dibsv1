@@ -22,7 +22,6 @@ class DashboardController extends Controller
     {
         $items = Item::where('dibs_caller_id',Auth::id())->where('is_available', true)->get();;
         
-        
         return view('dashboard')->withItems($items);
     }
 }

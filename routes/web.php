@@ -38,28 +38,27 @@ Route::post('/post_item', function (Request $request) {
 
     return redirect('/');
 });
+Route::get('/test', function () {
+  
+  return view('test');
+})->name('test');
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index');
+
+//To-do: Extint route
 Route::get('/home/{id}', 'DisplayItemDetailsController@show');
-/*
-Route::get('/call_dibs/{id}', function($id)
-{
-    Item::where('id', $id)
-          ->update(['dibs_caller_id' => Auth::id()]);
-  
-    $messages = array();
-    array_push($messages,'You have sucessfully called dibs');
-    
-    
-    return view('home')->withMessages($messages);
-});
-*/
+//
+
+// To-do: extinct function, create similar in api routes
 Route::get('/call_dibs/{id}','HomeController@callDibs');
+//------
 
 Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 Route::get('/post_item', 'PostItemController@index')->name('post_item');
 
+/* Old Function 
 Route::post('/get_user_position', function (Request $request) {
 
   $userPosition = new Position; // Creates new position, class created to handle latitude and longitude coordinates
@@ -90,4 +89,4 @@ Route::post('/get_user_position', function (Request $request) {
   return view('coordinates')->withItems($items);
   
 });
-
+*/
