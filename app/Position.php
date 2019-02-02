@@ -40,7 +40,6 @@ class Position
     
     public $lat;
     public $lng;
-    public $id;
     public $distanceToUser = 0;
     
     

@@ -9,22 +9,23 @@ use Auth;
 class HomeController extends Controller
 {
     
-    public function callDibs($id) // to-do: eliminate this function
-     {
-         //to-do: test if another user already called dibs
-        $affected = Item::where('id', $id)
+    public function callDibs($id)
+    {
+        $affected = Item::where([['id','=', $id],['owner_id','!=',Auth::id()]])
                 ->whereNull('dibs_caller_id')
                 ->update(['dibs_caller_id' => Auth::id()]);
+
       
-      
-        $messages = array();
+    
         if ($affected == 0)
-            array_push($messages,'Whops! Someone called dibs before you');
+            $message = 'Whops! Someone called dibs before you';
         else
-            array_push($messages,'You successfully called dibs!');
-        
-        return view('home')->withMessages($messages);
-     }
+            $message = 'You successfully called dibs!';
+    
+    return response()->json([
+        'message' => $message], 200);
+    
+    }
      
      
     public function index()

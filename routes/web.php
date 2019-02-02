@@ -38,55 +38,24 @@ Route::post('/post_item', function (Request $request) {
 
     return redirect('/');
 });
-Route::get('/test', function () {
-  
-  return view('test');
-})->name('test');
+
 
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index');
 
-//To-do: Extint route
-Route::get('/home/{id}', 'DisplayItemDetailsController@show');
-//
+Route::post('/call-dibs/{id}','HomeController@callDibs');
 
-// To-do: extinct function, create similar in api routes
-Route::get('/call_dibs/{id}','HomeController@callDibs');
-//------
 
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 Route::get('/post_item', 'PostItemController@index')->name('post_item');
 
-/* Old Function 
-Route::post('/get_user_position', function (Request $request) {
-
-  $userPosition = new Position; // Creates new position, class created to handle latitude and longitude coordinates
-  $userPosition->lat = $request->lat;
-  $userPosition->lng = $request->lng;
-  
-  
-  //$allitems = Item::all(); // Query all items from database
-  $allitems = Item::select('id','lat','lng')->get();
-  $items = array();
-  
-  
-  foreach ($allitems as $item)
-  {
-     $distance = $userPosition->getDistance($item->lat,$item->lng);
-      if ($distance <= 20) // If its within 20km of user location
-      {
-        $markerItem = new Position;
-        $markerItem->lat = $item->lat;
-        $markerItem->lng = $item->lng;
-        $markerItem->id = $item->id;
-        $markerItem->setDistanceToUser($distance);
-        
-        array_push($items,$markerItem);
-      }
-  }
-
-  return view('coordinates')->withItems($items);
-  
+Route::get('/manage_items', function () {
+  return view('manage_items');
 });
-*/
+
+
+
+Route::get('/messages', 'MessageController@index')->name('messages');
+Route::get('/get-chats', 'MessageController@getchats');
+Route::get('/private-messages/{id}','MessageController@getMessages');
+Route::post('/send-message','MessageController@sendMessage');

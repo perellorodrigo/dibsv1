@@ -6,7 +6,7 @@ async defer></script>
 
 
 @section('content')
-    <browse-component
+    <browse-view
     :user="{{ json_encode(Auth::user()) }}"
-    ></browse-component>
+    ></browse-view>
 @endsection

@@ -1,7 +1,7 @@
 <template>
 <div class="input-group">
     <div class="input-group-prepend">
-        <select :value="selectedCategoryID" @input="$emit('update:selectedCategoryID', $event.target.value)">
+        <select :value="selectedCategoryID" @input="$emit('update:selectedCategoryID', $event.target.value)" class="form-control">
             <option v-for="item in categories" v-bind:value="item.id">
             {{item.name}}
             </option>
