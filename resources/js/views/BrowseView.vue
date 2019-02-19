@@ -35,7 +35,7 @@
                                 :user="user"
                                 :selectedItem="selectedItem"
                             ></call-dibs>
-                            <button class="modal-default-button" @click="closeModal">Close</button>
+                            <button class="btn btn-danger" @click="closeModal">Close</button>
                         </template>
                     </modal-component>
                     <google-map-component
@@ -100,7 +100,7 @@ import axios from 'axios';
             this.geolocation() // get user location before mounting the component
         },
         mounted() {
-            axios.get('/api/get_categories')
+            axios.get('/get_categories')
             .then(response => {
                 this.categories = response.data.data.concat(Object.assign({}, {name: 'Category', id: -1}));
             });
@@ -276,8 +276,6 @@ import axios from 'axios';
 .item-list-details-text{
     padding: 18px;
     box-sizing: inherit;
-    width: 250px;
-    flex: 0 0 auto;
 }
 .item-list-details-button{
     padding: 18px 18px 12px;

@@ -22,22 +22,7 @@ use Illuminate\Support\Facades\Storage;
 
 
 Auth::routes();
-Route::post('/post_item', function (Request $request) {
-  //To-do: add file validation
-    $item = new Item;
-    $item->name = $request->input('name');
-    $item->description = $request->input('description');
-    $item->pickup_instructions = $request->input('pickup_instructions');
-    $item->owner_id = Auth::id();
-    $item->lat = floatval($request->input('itemlat'));
-    $item->lng = floatval($request->input('itemlng'));
-    $file = $request->file('picture');
-    $item->imageurl = Storage::disk('uploads')->put('photos',$file);
-    
-    $item->save();
 
-    return redirect('/');
-});
 
 
 
@@ -45,17 +30,32 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index');
 
 Route::post('/call-dibs/{id}','HomeController@callDibs');
-
+Route::post('/cancel-dibs/{id}','HomeController@cancelDibs');
 
 Route::get('/post_item', 'PostItemController@index')->name('post_item');
-
-Route::get('/manage_items', function () {
-  return view('manage_items');
-});
+Route::post('/post_item/add_item', 'PostItemController@addItem');
 
 
-
+//Message Routes
 Route::get('/messages', 'MessageController@index')->name('messages');
 Route::get('/get-chats', 'MessageController@getchats');
 Route::get('/private-messages/{id}','MessageController@getMessages');
 Route::post('/send-message','MessageController@sendMessage');
+//
+
+
+//Manage Items Route
+Route::get('/manage_items', 'ManageItemsController@index')->name('manage_items');
+Route::get('/manage_items/get_available', 'ManageItemsController@getAvailable');
+Route::get('/manage_items/get_awaiting', 'ManageItemsController@getAwaiting');
+Route::get('/manage_items/get_history', 'ManageItemsController@getHistory');
+Route::post('/manage_items/archive_item/{itemID}', 'ManageItemsController@archiveItem');
+//
+
+
+Route::get('/profile', 'ProfileController@index')->name('profile');
+Route::post('/changePassword','ProfileController@changePassword')->name('changePassword');
+
+Route::get('/get_categories', function () {
+    return CategoryResource::collection(Category::all());
+});

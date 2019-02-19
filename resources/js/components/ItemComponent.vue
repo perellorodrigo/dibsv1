@@ -1,5 +1,5 @@
 <template>
-    <div class="card" style="width: 100%;height:100%">
+    <div class="card">
         <img :src="'/uploads/' + item.imageurl" class="card-img-top">
         <div class="card-body d-flex flex-column">
             <h5 class="card-title mt-auto">{{item.name}}</h5>
@@ -18,7 +18,7 @@
 <style scoped>
 .card-img-top {
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
     align-self: center;
     height: 20vh;
 }

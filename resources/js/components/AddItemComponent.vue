@@ -25,14 +25,18 @@
             <label for="pickup_instructions" class="col-sm-3 control-label">Pick-up Instructions</label>
 
             <input type="text" class="form-control" v-model="pickupInstructions">
-        </div>        
-
+        </div>   
+        
         <div class="form-group">
-            <label for="location" class="col-sm-3 control-label">Item Location</label>
+            <button @click="getUserLocation" type="button" class="btn btn-dark">
+            Get Current Location
+            </button>
+        </div>
+        <div class="form-group">
             <input type="number"  class="form-control" placeholder="latitude" step="any" v-model="latitude">
             <input type="number"  class="form-control" placeholder="longitude" step="any" v-model="longitude">
         </div>
-                
+    
         <div class="form-group">
             <label for="picture" class="col-sm-3 control-label">Upload Picture:</label>
             <input type="file" id="picture" class="form-control-file" v-on:change="onImageChange" ref="imageInput">
@@ -67,13 +71,26 @@ export default {
         }
     },
     mounted() {
-        axios.get('/api/get_categories')
+        axios.get('/get_categories')
         .then(response => {
             this.categories = response.data.data;
         });
     },
     methods: {
-         onImageChange(e){
+        getUserLocation(){
+            navigator.geolocation.getCurrentPosition(this.geoSuccess, this.geoError);
+        },
+        geoSuccess(position) { // if sucessfully got user coordinates
+            this.latitude = position.coords.latitude
+            this.longitude = position.coords.longitude
+        },
+        geoError(error) {
+            //if error, display error and use fake coordinates
+            console.log(error);
+            this.latitude = -33.882885699999996
+            this.longitude = 151.2011262
+        },
+        onImageChange(e){
             console.log(e.target.files[0]);
             this.image = e.target.files[0];            
         },
@@ -95,7 +112,7 @@ export default {
             formData.append('image', this.image);
             formData.append('owner_id', this.user.id);
             
-            axios.post('/api/add_item', formData, config)
+            axios.post('/post_item/add_item', formData, config)
                 .then((response) => {
                     currentObj.success = response.data.success;
                     this.resetForm();
@@ -113,7 +130,7 @@ export default {
             this.image = null;
             this.$refs.imageInput.value = null;
         }
-        //https://itsolutionstuff.com/post/laravel-vue-js-image-upload-example-with-demoexample.html
+        
     }
 };
     

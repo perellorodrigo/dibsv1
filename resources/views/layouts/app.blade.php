@@ -90,8 +90,8 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Profile Settings</a>
-                            <a class="dropdown-item" href="#">Your Items</a>
+                            <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                            <a class="dropdown-item" href="{{ route('manage_items') }}">Manage Items</a>
                             <a class="dropdown-item" href="{{ route('post_item') }}">Post Item</a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();

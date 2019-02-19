@@ -25,7 +25,6 @@ class MarkerItemResource extends JsonResource
             'imageurl' => $this->imageurl,
             'dibs_caller_id' => $this->dibs_caller_id,
             'owner_id' => $this->owner_id
-            
         ];
     }
 }

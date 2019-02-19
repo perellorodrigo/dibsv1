@@ -9,25 +9,35 @@
                   <button type="button" class="" @click="selectFilter" v-bind:class="{active: !optionOne}" value="optionTwo">Your Items</button>
                 </div>
             	
-                <ul v-if="items" style="width: 100%;">
-                    <li v-for="item in filteredChats" @click="activeItem = item" :key="item.id">
-                        <a href="#">
-                            <div style="height:80px; display: flex; box-shadow: 0 1px 3px 0 rgba(30,41,61,.1), 0 1px 2px 0 rgba(30,41,61,.2);">
-                                <div class="item-chat-thumbnail"><img style="max-width:100%; max-height: 100%;" :src="'/uploads/' + item.imageurl"></div>
-                                <div style="align-self: center;     margin-left: 10px;">
-                                    <h4>{{item.dibscaller.name}}</h4>
-                                    <h5>Item: {{item.name}}</h5>
+            	<template v-if="items">
+                    <ul v-if="filteredChats.length" style="width: 100%;">
+                        <li v-for="item in filteredChats" @click="activeItem = item" :key="item.id">
+                            <a href="#">
+                                <div style="height:80px; display: flex; box-shadow: 0 1px 3px 0 rgba(30,41,61,.1), 0 1px 2px 0 rgba(30,41,61,.2);">
+                                    <div class="item-chat-thumbnail"><img style="max-width:100%; max-height: 100%;" :src="'/uploads/' + item.imageurl"></div>
+                                    <div style="align-self: center;     margin-left: 10px;">
+                                        <h4 v-if="item.dibscaller.id === user.id">
+                                        {{item.owner.name}}
+                                        </h4>
+                                        <h4 v-else>{{item.dibscaller.name}}</h4>
+                                        <h5>Item: {{item.name}}</h5>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                            </a>
+                        </li>
+                    </ul>
+                    <div v-else class="alert alert-warning" role="alert">No items were found!</div>
+                </template>
+                
             </div>
             <div v-else class="main-content" key="messageWindow">
-                <div style="width: 100%;">
-                    <a href="#" class="back-buton" @click="activeItem = null">
-                        <img src="svg/return-1.svg" style="height: 32px; padding: 0.2rem;">
-                        <span style="font-size: 1.6rem; color: #2d3b45;">Chats</span>
+                <div class="chat-header">
+                    <a href="#" class="back-button" @click="activeItem = null">
+                        <img src="svg/return-1.svg">
+                        <span>Chats</span>
+                    </a>
+                    <a href="#" class="refresh-button" @click="fetchMessages">
+                        <img src="svg/refresh.svg">
                     </a>
                 </div>
                 <section v-if="activeItem" class="active-item-container">
@@ -41,11 +51,11 @@
                 </section>
                 <template v-for="message in allMessages">
                     <div v-if="message.user_id == user.id" style="align-self: flex-start; padding: 1rem;">
-                        <p style="font-weight:bold; margin-bottom: 10px;">You send: </p>
+                        <p style="font-weight:bold; margin-bottom: 10px;">You sent: </p>
                         <p>{{message.message}}</p>  
                     </div>
                     <div v-else style="align-self: flex-end;  padding: 1rem;">
-                        <p style="font-weight:bold; text-align: right; margin-bottom: 10px;">{{message.user.name}} send:</p>
+                        <p style="font-weight:bold; text-align: right; margin-bottom: 10px;">{{message.user.name}} sent:</p>
                         <p>{{message.message}}</p>  
                     </div>
                 </template>
@@ -95,16 +105,10 @@ export default {
                 })
         
         return chats;
-      },
-      min: function(){
-          return this.demo6.value[0];
-      },
-      max: function(){
-          return this.demo6.value[1];
       }
     },
     methods:{
-        fetchItems() { // Function that will load the items on the left, each item has its message box
+        fetchAllChats() { // Function that will load the items on the left, each item has its message box
             axios.get('/get-chats')
             .then(response => {
                 this.items = response.data;
@@ -112,8 +116,6 @@ export default {
             });
         },
         selectFilter(e){
-            
-            
             if(e.target.value == "optionOne")
                 this.optionOne = true;
             else
@@ -126,7 +128,10 @@ export default {
                 
         },
         fetchMessages(){
-            //todo: messages will update with laravel event broadcast
+            axios.get('/private-messages/' + this.activeItem.id)
+                .then(response => {
+                    this.allMessages = response.data;
+                });
         },
         sendMessage(e){
             //check if there message
@@ -166,29 +171,20 @@ export default {
         }
     },
     mounted(){
-        this.fetchItems();
+        this.fetchAllChats();
     },
     watch:{
-        activeItem: function(newValue){
-            if (this.activeItem)
-            {
-                axios.get('/private-messages/' + this.activeItem.id)
-                .then(response => {
-                    this.allMessages = response.data;
-                });
+        activeItem: function(){
+            if (this.activeItem){
+                this.fetchMessages();
             }
-        },
-    
-        min(){
-            console.log("1" + this.demo6.value);
-            //console.log("2" + this.demo6.value[1]);
-        } 
-        
+        }
     }
 }
 </script>
 
 <style scoped>
+
 .selector-group{
     position: relative;
     display: inline-flex;
@@ -224,11 +220,39 @@ export default {
     width: 100%;
     align-items: stretch;
 }
-.back-buton{
+.chat-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    box-sizing: border-box;
+}
+
+.back-button{
     display: flex;
     align-items: center;
     text-decoration: none;
-    padding: 1rem;
+    box-sizing: border-box;
+    padding: 10px 0 10px 0;
+    height: 100%;
+}
+.back-button > span{
+    font-size: 1.6rem;
+    color: #2d3b45;
+}
+.back-button > img{
+    height: 100%;
+    padding: 5px 0px 5px 0;
+    
+}
+.refresh-button{
+    height: 100%;
+    padding: 10px 0 10px 0;
+}
+.refresh-button > img{
+    height: 100%;
+    padding: 0 10px 0 0;
 }
     
 .main-content{
