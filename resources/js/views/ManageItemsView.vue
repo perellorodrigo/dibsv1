@@ -58,7 +58,6 @@ export default {
         axios.get('/manage_items/get_available')
             .then(response => {
                 this.items = response.data;
-                console.dir(this.items)
         })
         
     },
@@ -71,7 +70,6 @@ export default {
                 axios.get('/manage_items/' + this.params)
                 .then(response => {
                     this.items = response.data;
-                    console.dir(this.items)
                 })
             }) 
         }  
@@ -100,7 +98,6 @@ export default {
             axios.get('/manage_items/' + this.params)
                 .then(response => {
                     this.items = response.data;
-                    console.dir(this.items)
             })
         }
     }

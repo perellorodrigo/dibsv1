@@ -14,8 +14,6 @@
 //Route::get('/', function () {
   //  return view('welcome');
 //});
-use Dibs\Item;
-use Dibs\Position;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,9 +26,15 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index');
-
-Route::post('/call-dibs/{id}','HomeController@callDibs');
-Route::post('/cancel-dibs/{id}','HomeController@cancelDibs');
+//call dibs
+Route::post('/call-dibs/{id}','HomeController@callDibs')->middleware('auth');
+//cancel dibs
+Route::post('/cancel-dibs/{id}','HomeController@cancelDibs')->middleware('auth');
+//get markers
+Route::get('/get_markers','HomeController@getMarkers');
+//get item by id - Used in home page, called in a marker click on map
+Route::get('/item/{id}', 'HomeController@getItemByID');
+Route::get('/get_categories','HomeController@getCategories');
 
 Route::get('/post_item', 'PostItemController@index')->name('post_item');
 Route::post('/post_item/add_item', 'PostItemController@addItem');
@@ -56,6 +60,4 @@ Route::post('/manage_items/archive_item/{itemID}', 'ManageItemsController@archiv
 Route::get('/profile', 'ProfileController@index')->name('profile');
 Route::post('/changePassword','ProfileController@changePassword')->name('changePassword');
 
-Route::get('/get_categories', function () {
-    return CategoryResource::collection(Category::all());
-});
+

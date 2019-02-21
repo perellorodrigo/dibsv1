@@ -35,17 +35,17 @@ export default {
     },
     setupMarkers: function() {
       this.$parent.displayedItems.forEach((item) => { // Access parent component which contain the coordinates
-      const position = new google.maps.LatLng(item.lat, item.lng)
-      var marker = new google.maps.Marker({ 
-                    position,
-                    map: this.map,
-                    distanceToUser: item.distanceToUser,
-                    id: item.id
-                    });
-      
-      marker.addListener('click', () => this.markerClick(item.id));
-      this.markers.push(marker);
-      this.map.fitBounds(this.bounds.extend(position));
+        const position = new google.maps.LatLng(item.lat, item.lng)
+        var marker = new google.maps.Marker({ 
+                      position,
+                      map: this.map,
+                      distanceToUser: item.distanceToUser,
+                      id: item.id
+                      });
+        
+        marker.addListener('click', () => this.markerClick(item.id));
+        this.markers.push(marker);
+        this.map.fitBounds(this.bounds.extend(position));
       });
     },
     setupMap: function(){
@@ -91,13 +91,9 @@ export default {
     },
     radius: function(){
       if (this.circle)
-      {
         this.circle.setRadius(this.radius * 1000)
-      }
-      else {
+      else 
           this.setupRadiusCircle()
-      }
-
     }
   }
 };

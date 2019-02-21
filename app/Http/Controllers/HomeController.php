@@ -4,6 +4,11 @@ namespace Dibs\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Dibs\Item;
+use Dibs\Category;
+use Dibs\Position;
+use Dibs\Http\Resources\ItemResource;
+use Dibs\Http\Resources\MarkerItemResource;
+use Dibs\Http\Resources\CategoryResource;
 use Auth;
 
 class HomeController extends Controller
@@ -45,5 +50,46 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+    
+    public function getMarkers(Request $request)
+    {
+        $userPosition = new Position; // Creates new position, class created to handle latitude and longitude coordinates
+        $userPosition->lat = $request->lat;
+        $userPosition->lng = $request->lng;
+        
+        $allitems = Item::where('is_available',true)->get();
+        $markeritems = array();
+        
+        foreach ($allitems as $item)
+        {
+            $distance = $userPosition->getDistance($item->lat,$item->lng);
+            if ($distance <= 20) // If its within 20km of user location
+            {
+                $markerItem = new Position;
+                $markerItem->lat = $item->lat;
+                $markerItem->lng = $item->lng;
+                $markerItem->id = $item->id;
+                $markerItem->name = $item->name;
+                $markerItem->category_id = $item->category_id;
+                $markerItem->description = $item->description;
+                $markerItem->imageurl = $item->imageurl;
+                $markerItem->setDistanceToUser($distance);
+                $markerItem->dibs_caller_id = $item->dibs_caller_id;
+                $markerItem->owner_id = $item->owner_id;
+                
+                array_push($markeritems,$markerItem);
+            }
+        }
+        
+        return MarkerItemResource::collection(collect($markeritems));
+    }
+    
+    public function getItemByID($id){
+        return json_encode(Item::where('id',$id)->first());
+    }
+    
+    public function getCategories(){
+        return CategoryResource::collection(Category::all());
     }
 }

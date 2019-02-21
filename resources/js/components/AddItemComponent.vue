@@ -95,7 +95,6 @@ export default {
             this.image = e.target.files[0];            
         },
         formSubmit(e){
-            //e.preventDefault();
             let currentObj = this;
             
             const config = {
@@ -133,6 +132,4 @@ export default {
         
     }
 };
-    
-    
 </script>

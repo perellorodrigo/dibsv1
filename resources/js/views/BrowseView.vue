@@ -16,11 +16,11 @@
             </div>
         </div>
         <div class="wrapper">
-                <div class="mapcontainer" style="position: relative;">
+                <div class="map-container">
                     <modal-component v-if="isModalVisible" @close="closeModal">
                         <template slot="header">Item details</template>
                         <template slot="body">
-                            <div v-if="selectedItem" class="" style="width: 100%;height:100%;display:flex; flex-direction: column;justify-content: space-between;">
+                            <div v-if="selectedItem" class="modal-body">
                                 <div style="flex: 1 1 auto; text-align: center;">
                                     <img :src="'/uploads/' + selectedItem.imageurl" style="max-height: 100%; max-width:100%;">
                                 </div>
@@ -51,10 +51,10 @@
                         <p>{{filteredItems.length}} displayed of total {{displayedItems.length}} results found in your area</p>
                     </div>
                     <ul class="item-list-container" v-if="displayedItems">
-                        <li v-for="item in filteredItems" :key="item.id" style="margin-top: 15px; box-sizing: border-box;">
+                        <li v-for="item in filteredItems" :key="item.id">
                             <section class="item-list-container">
-                                <div style="height: 300px; width: 100%; text-align: center;">
-                                    <img style="max-width:100%; max-height: 100%;" :src="'/uploads/' + item.imageurl">
+                                <div class="item-list-image">
+                                    <img :src="'/uploads/' + item.imageurl">
                                 </div>
                                 <div class="item-list-details">
                                     <div class="item-list-details-text">
@@ -142,16 +142,16 @@ import axios from 'axios';
         methods:
         {
             matchHeight (event) {
-                let height = this.$refs.content.clientHeight - this.$refs.searchBar.clientHeight;
-                var heightString = height + 'px';
-                Vue.set(this.sideColHeight, 'height', heightString); 
+                let height = this.$refs.content.clientHeight - this.$refs.searchBar.clientHeight
+                var heightString = height + 'px'
+                Vue.set(this.sideColHeight, 'height', heightString);
             },
             showModal() {
-                this.isModalVisible = true;
+                this.isModalVisible = true
             },
             closeModal() {
-                this.selectedItemID = null;
-                this.isModalVisible = false;
+                this.selectedItemID = null
+                this.isModalVisible = false
             },
             geolocation() {
                 navigator.geolocation.getCurrentPosition(this.geoSuccess, this.geoError);
@@ -163,14 +163,14 @@ import axios from 'axios';
             },
             geoError(error) {
                 //if error, display error and use fake coordinates
-                console.log(error);
+                console.log(error)
                 this.userlat = -33.882885699999996
                 this.userlng = 151.2011262
                 this.getMarkers()
             },
             getMarkers(){
                 //axios GET request to pick the coordinates of items
-                axios.get('/api/get_markers', {
+                axios.get('/get_markers', {
                   params: {
                     'lat': this.userlat,
       		        'lng': this.userlng
@@ -195,7 +195,7 @@ import axios from 'axios';
                     this.selectedItem = null
                 else
                 {
-                    axios.get('/api/item/' + this.selectedItemID)
+                    axios.get('/item/' + this.selectedItemID)
                     .then(response => {
                         this.selectedItem = response.data
                         this.isModalVisible = true
@@ -228,7 +228,15 @@ import axios from 'axios';
 }
 .item-list-container{
     overflow: auto;
-    
+}
+.item-list-image{
+    height: 300px; 
+    width: 100%;
+    text-align: center;
+}
+.item-list-image > img {
+    max-width:100%;
+    max-height: 100%;
 }
 
 .filter-component{
@@ -241,6 +249,9 @@ import axios from 'axios';
     display: grid;
     grid-template-rows: 1fr;
 }
+.map-container{
+    position: relatives;
+}
 .side-container{
     display: flex;
     flex-direction: column;
@@ -248,6 +259,13 @@ import axios from 'axios';
 }
 .side-container > ul {
     list-style: none;
+}
+.modal-body{
+    width: 100%;
+    height:100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .content{
@@ -268,6 +286,12 @@ import axios from 'axios';
     background-color: #fff;
     box-shadow: 0 1px 3px 0 rgba(30,41,61,.1), 0 1px 2px 0 rgba(30,41,61,.2);
 }
+.item-list-container > li {
+    margin-top: 15px;
+    box-sizing: border-box;
+}
+
+
 .item-list-details{
     display: flex;
     flex-direction: column;

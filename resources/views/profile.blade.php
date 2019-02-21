@@ -13,7 +13,6 @@
                     <h5><span style="font-weight: bold;">Name:</span> {{ Auth::user()->name }}</h5>
                     <h5><span style="font-weight: bold;">Email:</span> {{ Auth::user()->email }}</h5>
                     <h5><span style="font-weight: bold;">Approval Rating:</span> {{ Auth::user()->approval_rating }}</h5>
-                    
                 </div>
             </div>
             <div class="card mt-4">
@@ -32,7 +31,7 @@
                     <form action="{{ route('changePassword') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
                         {{ csrf_field() }}
                     <div class="form-group">
-                        <label for="current-password" class="col-sm-3 control-label">Current Password</label>
+                        <label for="current-password" class="col-sm-6 control-label">Current Password</label>
                         <div class="col-sm-6">
                             <input type="password" name="current-password" id="current-password" class="form-control" required>
                             @if ($errors->has('current-password'))
@@ -43,7 +42,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new-password" class="col-sm-3 control-label">New Password</label>
+                        <label for="new-password" class="col-sm-6 control-label">New Password</label>
                         <div class="col-sm-6">
                             <input type="password" name="new-password" id="new-password" class="form-control" required>
                             @if ($errors->has('new-password'))
@@ -54,7 +53,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new-password-confirm" class="col-sm-3 control-label">Confirm New Password</label>
+                        <label for="new-password-confirm" class="col-sm-6 control-label">Confirm New Password</label>
                         <div class="col-sm-6">
                             <input type="password" name="new-password_confirmation" id="new-password-confirm" class="form-control" required>
                         </div>

@@ -1,7 +1,7 @@
 <template>            
-<div style="display: flex; flex-direction: row;">
+<div class="slider-container">
     <h5>Radius: </h5>
-    <div class="slidecontainer" style="flex: 1; padding: 0.5rem;">
+    <div>
         <input type="range" min="1" max="20" class="slider" step="0.5" id="radiusSlider" :value="radius" @input="$emit('update:radius', $event.target.value)">
     </div>
     <h5>{{radius}} km</h5>
@@ -10,9 +10,6 @@
 <script>
 export default {
     props: ['radius'],
-        mounted() {
-            console.log('Radius slider mounted.');
-        }
     }
 </script>
 <style scoped>
@@ -21,6 +18,15 @@ h5{
     padding: 0.5rem;
     min-width: 100px;
 }
+.slider-container{
+    display: flex;
+    flex-direction: row;
+}
+.slider-container > div{
+    flex: 1;
+    padding: 0.5rem;
+}
+
 .slider {
   -webkit-appearance: none;
   width: 100%;

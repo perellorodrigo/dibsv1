@@ -20,7 +20,6 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
 
-Vue.component('user-dibs-view', require('./views/UserDibsView.vue').default);
 Vue.component('browse-view', require('./views/BrowseView.vue').default);
 Vue.component('manage-items-view', require('./views/ManageItemsView.vue').default);
 Vue.component('chat-view', require('./views/ChatView.vue').default);

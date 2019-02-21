@@ -7,17 +7,13 @@
             </option>
         </select>
     </div>
-    <input type="text" class="form-control" aria-label="Text input with dropdown button" :value="searchText" @input="$emit('update:searchText', $event.target.value)">
+    <input type="text" class="form-control" :value="searchText" @input="$emit('update:searchText', $event.target.value)">
 </div>
 </template>
 
 <script>
 export default {
     props: ['categories','selectedCategoryID','searchText'],
-        mounted() {
-            console.log('Search Bar mounted. Categories:');
-            console.dir(this.categories);
-        }
     }
     
 </script>

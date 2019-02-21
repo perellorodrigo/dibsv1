@@ -5,8 +5,8 @@
                 <h3 class="chat-bar-title">Messages</h3>
                 
                 <div class="selector-group" role="group">
-                  <button type="button" class="" @click="selectFilter" v-bind:class="{active: optionOne}"  value="optionOne">Your Dibs</button>
-                  <button type="button" class="" @click="selectFilter" v-bind:class="{active: !optionOne}" value="optionTwo">Your Items</button>
+                  <button type="button" class="" @click="displayUserDibs = true" v-bind:class="{active: displayUserDibs}">Your Dibs</button>
+                  <button type="button" class="" @click="displayUserDibs = false" v-bind:class="{active: !displayUserDibs}">Your Items</button>
                 </div>
             	
             	<template v-if="items">
@@ -84,7 +84,7 @@ export default {
         activeItem:null,
         allMessages:[],
         items:[],
-        optionOne: true,
+        displayUserDibs: true,
         selectedFilter: "displayUserDibs",
         value: 0
       }
@@ -114,18 +114,6 @@ export default {
                 this.items = response.data;
                 console.log(response.data);
             });
-        },
-        selectFilter(e){
-            if(e.target.value == "optionOne")
-                this.optionOne = true;
-            else
-                this.optionOne = false;
-            
-            if (this.optionOne)
-                this.selectedFilter = "displayUserDibs";
-            else
-                this.selectedFilter = "displayUserItems";
-                
         },
         fetchMessages(){
             axios.get('/private-messages/' + this.activeItem.id)
@@ -166,7 +154,6 @@ export default {
             .then(response => {
                     this.message=null;
                     this.allMessages.push(response.data.message)
-                    //setTimeout(this.scrollToEnd,100);
             });
         }
     },
@@ -178,6 +165,12 @@ export default {
             if (this.activeItem){
                 this.fetchMessages();
             }
+        },
+        displayUserDibs: function(){
+            if (this.displayUserDibs)
+                this.selectedFilter = "displayUserDibs";
+            else
+                this.selectedFilter = "displayUserItems";
         }
     }
 }
